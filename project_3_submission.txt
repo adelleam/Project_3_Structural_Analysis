@@ -1,9 +1,9 @@
-PartialCredit::T
-Q1::
-Q2::
-Q3::
-Q4::
-Q5::
+PartialCredit::F
+Q1::20
+Q2::24
+Q3::23.99
+Q4::25.40
+Q5::26.30
 Q6::
 Q7::
 Q8::

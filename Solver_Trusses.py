@@ -38,16 +38,67 @@ def PostprocessReactions(K, d, F, n_unknowns, nodes):
 def ComputeMemberForces(bars):
     # COMPLETE THIS FUNCTION
     # Compute member forces for all bars using equation 14-23 
-    pass
+    for bar in bars:
+        #bar properties
+        E = bar.E
+        A = bar.A
+        L = bar.Length()
+        
+        #direction of bar
+        lambdax, lambday = bar.LambdaTerms()
+        
+        #horizontal/vertical movement of starting node
+        u1x = bar.init_node.xdisp
+        u1y = bar.init_node.ydisp
+        
+        #get movements of ending node
+        u2x = bar.end_node.xdisp
+        u2y = bar.end_node.ydisp
+        
+        #calculate internal force
+        axial_force = (E*A/L) * (-lambdax*u1x - lambday*u1y + lambdax*u2x + lambday*u2y)
+        
+        bar.axial_load = axial_force
     
 # compute the normal stresses
 def ComputeNormalStresses(bars):
     # COMPLETE THIS FUNCTION
     # Compute normal stress for all bars
-    pass
+    
+    for bar in bars:
+        
+        #axial force in bar
+        axial_force = bar.axial_load
+        
+        #cross-sectional area of bar
+        A = bar.A
+        
+        #calculate normal stress (F/A)
+        normal_stress = axial_force / A
+        
+        bar.normal_stress = normal_stress
+
 
 # compute the critical buckling load of a member
 def ComputeBucklingLoad(bars):
     # COMPLETE THIS FUNCTION
     # Compute critical buckling load for all bars
-    pass
+    
+    K = 1
+    
+    for bar in bars:
+        
+        #material stiffness and length
+        E = bar.E
+        L = bar.Length()
+        
+        #strong and weak axis moments of inertia
+        Istrong = bar.GetStrongSecondMoment()
+        Iweak = bar.GetWeakSecondMoment()
+        
+        #calculate buckling with strong and weak
+        Pstrong = (np.pi**2 * E * Istrong) / (K * L)**2
+        Pweak = (np.pi**2 * E * Iweak) / (K*L)**2
+        
+        #Choose smaller load
+        bar.buckling_load = min(Pstrong, Pweak)

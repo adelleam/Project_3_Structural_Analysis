@@ -90,7 +90,7 @@ def ComputeBucklingLoad(bars):
         
         #material stiffness and length
         E = bar.E
-        L = bar.Length()
+        L = bar.Length() * 12 #from ft to in
         
         #strong and weak axis moments of inertia
         Istrong = bar.GetStrongSecondMoment()
